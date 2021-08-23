@@ -1,0 +1,19 @@
+import User from '../../../models/User';
+
+export default {
+  User: {
+    fullName: (user) => `${user.firstName} ${user.lastName}`,
+  },
+  Query: {
+    users: () => User.find(),
+    user: (_, { id }) => User.findById(id),
+  },
+  Mutation: {
+    createUser: (_, { data }, { pubsub }) => {
+      const user = User.create(data);
+      return user;
+    },
+    updateUser: (_, { id, data }) => User.findOneAndUpdate(id, data, { new: true }),
+    deleteUser: async (_, { id }) => !!(await User.findByIdAndDelete(id)),
+  },
+};
